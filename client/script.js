@@ -75,7 +75,7 @@ async function handleSubmit(event) {
   loader(messageDiv);
 
   //fetching answers
-  const res = await fetch("http://localhost:5000/post", {
+  const res = await fetch("https://osama-chat-bot.onrender.com/post", {
     method: "POST",
     headers: {
       "Content-type": "application/json",
