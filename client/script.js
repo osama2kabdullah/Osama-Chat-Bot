@@ -22,7 +22,7 @@ function textTyping(element, text) {
   let index = 0;
   let interval = setInterval(() => {
     if (index < text.length) {
-      element.innerHTML += text.chartAt(index);
+      element.innerHTML += text.charAt(index);
       index++;
     } else {
       clearInterval(interval);
@@ -73,6 +73,31 @@ async function handleSubmit(event) {
   const messageDiv = document.getElementById(uid);
   //star loading before genarte answer
   loader(messageDiv);
+
+  //fetching answers
+  const res = await fetch("http://localhost:5000/post", {
+    method: "POST",
+    headers: {
+      "Content-type": "application/json",
+    },
+    body: JSON.stringify({
+      prompt: data.get("prompt"),
+    }),
+  });
+
+  clearInterval(loadInterval);
+  messageDiv.innerHTML = "";
+  
+  if (res.ok) {
+    const data = await res.json();
+    const parsedData = data.bot.trim();
+
+    textTyping(messageDiv, parsedData);
+  } else {
+    const error = await res.text();
+    messageDiv.innerHTML = 'Something went wrong';
+    alert(error);
+  }
 }
 
 form.addEventListener("submit", handleSubmit);
